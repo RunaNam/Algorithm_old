@@ -1,84 +1,71 @@
-#include <iostream>
+#include <cstdio>
 #include <vector>
-#include <math.h>
 using namespace std;
-int ground[50][50] = {0};
-int m, n, k;
+
+int ground[50][50] = {
+    0,
+};
+vector<pair<int, int>> cab;
+bool check[50][50] = {
+    false,
+};
+
 int cnt;
-void groundN(int x, int y)
+int t, m, n, k;
+
+int dx[] = {0, 0, 1, -1};
+int dy[] = {1, -1, 0, 0};
+
+void dfs(int x, int y)
 {
-    if (x >= n || y >= m || x < 0 || y < 0)
-    {
-        return;
-    }
-    if (ground[x][y] == 1)
-    {
-        ground[x][y] = 0;
-    }
+    check[x][y] = true;
 
-    else if (ground[x][y] == 0)
+    for (int i = 0; i < 4; i++)
     {
-        return;
-    }
-    groundN(x + 1, y);
-    groundN(x, y + 1);
-    groundN(x - 1, y);
-    groundN(x, y - 1);
-
-    return;
-}
-
-void init()
-{
-    for (int i = 0; i < 50; i++)
-    {
-        for (int j = 0; j < 50; j++)
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if (0 <= nx && nx < m && 0 <= ny && ny < n)
         {
-            ground[i][j] = 0;
+            if (check[nx][ny] == false && ground[nx][ny] == 1)
+            {
+                cnt--;
+                dfs(nx, ny);
+            }
         }
     }
 }
 
 int main()
 {
-    int tc;
-    int a, b;
-    vector<int> result;
-    while (tc--)
+    int t1, t2;
+
+    scanf("%d", &t);
+    while (t--)
     {
-        init();
-        int res = 0;
-        scanf("%d %d %d", &n, &m, &k);
+        scanf("%d %d %d", &m, &n, &k);
+        cnt = k;
         for (int i = 0; i < k; i++)
         {
-            int x, y;
-            scanf("%d %d", &x, &y);
-            ground[x][y] = 1;
+            scanf("%d %d", &t1, &t2);
+            cab.push_back(make_pair(t1, t2));
+            ground[t1][t2] = 1;
         }
-        for (int i = 0; i < n; i++)
+        while (!cab.empty())
         {
-            for (int j = 0; j < m; j++)
+            int x = cab.back().first;
+            int y = cab.back().second;
+            cab.pop_back();
+            dfs(x, y);
+        }
+
+        for (int i = 0; i < m; i++)
+        {
+            for (int q = 0; q < n; q++)
             {
-                if (ground[i][j] == 1)
-                {
-                    res++;
-                    groundN(i, j);
-                }
+                ground[i][q] = 0;
+                check[i][q] = false;
             }
         }
-
-        result.push_back(res);
-    }
-
-    for (int i = 0; i < (int)result.size(); i++)
-    {
-        if (i < ((int)result.size() - 1))
-        {
-            cout << result[i] << endl;
-        }
-        else
-        {
-            printf("%d\n", result[i]);
-        }
+        printf("%d\n", cnt);
     }
 }
