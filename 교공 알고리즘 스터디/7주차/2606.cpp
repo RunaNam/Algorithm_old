@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -19,6 +20,28 @@ void dfs(int a)
         }
     }
     cnt++;
+}
+
+void bfs()
+{
+    queue<int> q;
+    q.push(1);
+
+    while (!q.empty())
+    {
+        int tmp = q.front();
+        q.pop();
+        virus[tmp] = true;
+
+        for (int i = 0; i < v[tmp].size(); i++)
+        {
+            if (!virus[v[tmp][i]])
+            {
+                q.push(v[tmp][i]);
+                cnt++;
+            }
+        }
+    }
 }
 
 int main()
