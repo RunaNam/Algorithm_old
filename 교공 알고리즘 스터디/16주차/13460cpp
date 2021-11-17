@@ -1,0 +1,164 @@
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <string>
+using namespace std;
+
+int n, m;
+bool visited[11][11][11][11] = {
+    false,
+};
+char board[11][11];
+
+struct Marble
+{
+    int bx, by;
+    int rx, ry;
+    int count;
+};
+
+int dx[] = {0, 0, 1, -1};
+int dy[] = {1, -1, 0, 0};
+
+int bfs(int bx, int by, int rx, int ry)
+{
+    queue<Marble> q;
+
+    visited[bx][by][rx][ry] = true;
+    Marble tmp{bx, by, rx, ry, 1};
+    q.push(tmp);
+
+    while (!q.empty())
+    {
+        Marble cur = q.front();
+        q.pop();
+
+        int curBx = cur.bx;
+        int curRx = cur.rx;
+        int curBy = cur.by;
+        int curRy = cur.ry;
+        int curCnt = cur.count;
+
+        if (curCnt > 10)
+        {
+            return -1;
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+
+            int newBx = curBx;
+            int newRx = curRx;
+            int newBy = curBy;
+            int newRy = curRy;
+
+            bool B_in_hole = false;
+            bool R_in_hole = false;
+
+            while (board[newBy + dy[i]][newBx + dx[i]] != '#')
+            {
+                newBx += dx[i];
+                newBy += dy[i];
+                if (board[newBy][newBx] == 'O')
+                {
+                    B_in_hole = true;
+                    break;
+                }
+            }
+
+            while (board[newRy + dy[i]][newRx + dx[i]] != '#')
+            {
+                newRx += dx[i];
+                newRy += dy[i];
+                if (board[newRy][newRx] == 'O')
+                {
+                    R_in_hole = true;
+                    break;
+                }
+            }
+
+            if (B_in_hole)
+            {
+                continue;
+            }
+            if (R_in_hole && !B_in_hole)
+            {
+                return curCnt;
+            }
+
+            if (newRx == newBx && newRy == newBy)
+            {
+                if (i == 0)
+                {
+                    if (curRy < curBy)
+                        newRy -= dy[i];
+                    else
+                        newBy -= dy[i];
+                }
+                else if (i == 1)
+                {
+                    if (curRy > curBy)
+                        newRy -= dy[i];
+                    else
+                        newBy -= dy[i];
+                }
+                else if (i == 2)
+                {
+                    if (curRx < curBx)
+                        newRx -= dx[i];
+                    else
+                        newBx -= dx[i];
+                }
+                else if (i == 3)
+                {
+                    if (curRx > curBx)
+                        newRx -= dx[i];
+                    else
+                        newBx -= dx[i];
+                }
+            }
+
+            if (!visited[newBx][newBy][newRx][newRy])
+            {
+                visited[newBx][newBy][newRx][newRy] = true;
+                Marble tmp{newBx, newBy, newRx, newRy, curCnt + 1};
+                q.push(tmp);
+            }
+        }
+    }
+    return -1;
+}
+
+int main()
+{
+    int bx, by, rx, ry;
+    string str;
+
+    cin >> n >> m;
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> str;
+        for (int j = 0; j < m; j++)
+        {
+            board[i][j] = str[j];
+            if (str[j] == 'B')
+            {
+                by = i;
+                bx = j;
+            }
+            if (str[j] == 'R')
+            {
+                ry = i;
+                rx = j;
+            }
+        }
+    }
+
+    int result = bfs(bx, by, rx, ry);
+
+    cout << result;
+
+    return 0;
+}
