@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -60,7 +59,7 @@ public class J15686 {
 				for (int i = 0; i < chickens.size(); i++) {
 					if (visited[i]) {
 						tmpChickenDist = Math.min(tmpChickenDist,
-							Math.abs(house.x - chickens.get(i).x) + Math.abs(house.y - chickens.get(i).y));
+								Math.abs(house.x - chickens.get(i).x) + Math.abs(house.y - chickens.get(i).y));
 					}
 				}
 				dist += tmpChickenDist;
@@ -71,7 +70,7 @@ public class J15686 {
 
 		for (int i = idx + 1; i < chickens.size(); i++) {
 			visited[i] = true;
-			checkChickenDistance(i, cnt+1);
+			checkChickenDistance(i, cnt + 1);
 			visited[i] = false;
 		}
 	}
