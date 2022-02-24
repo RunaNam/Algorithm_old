@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class J16236 {
+public class J14503 {
     private static class Cleaner {
         int x, y, dir;
 

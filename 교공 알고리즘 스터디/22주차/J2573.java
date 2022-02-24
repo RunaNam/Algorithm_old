@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class J16236 {
+public class J2573 {
     private static class Iceberg {
         int x, y;
 
